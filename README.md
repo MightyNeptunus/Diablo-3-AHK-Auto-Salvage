@@ -11,7 +11,7 @@ Is an asistant to help with salvaging Legendary Items, Set Items, keeping track 
 2. Drop D3Assist.ahk into folder
 3. Put Diablo 3 to Windowed (Fullscreen) mode. In game Press ESC --> Options --> Video --> Display --> Windowed (Fullscreen)
 4. In game open inventory scren then start the script
-5. A windows will open in center screen and it will have 3 different start buttons. To the left it will show what each button does.
+5. A windows will open in center screen and it will have 5 different start buttons. To the left it will show what each button does.
 6. Press start on the first start button. It will start counting down from 5 to 0.
 7. Hover Mouse over TOP LEFT of inventory screen. When countdown reach 0 it will record the mouse location and save it. The button text will change and be disabled. SO DON'T be alarmed!
 8. Press start on the second start button. It will start counting down from 5 to 0.
@@ -19,7 +19,13 @@ Is an asistant to help with salvaging Legendary Items, Set Items, keeping track 
 10. Third start button is for the salvage area. so go to the Artisan (Haedrig Eamon) and click on the salvage tab.
 11. Once there click start on the program.
 12. Hover over the FIRST SALVAGE ICON. After 5 seconds the script will record the salvage button location. The button text will change and be disabled. SO DON'T be alarmed!
-13. After all is done click close and you are ready yo use the script
+13. For the cube go over to kunai's cube and open up the cube
+14. Press start on Cube Transmute Button. It will start counting down from 5 to 0.
+15. Hover over Transmute button in the cube.When countdown reach 0 it will record the mouse location and save it. The button text will change and be disabled. SO DON'T be alarmed!
+16. For the cube go over to kunai's cube and open up the cube
+17. Press start on Cube Fill Button. It will start counting down from 5 to 0.
+18. Hover over Fill button in the cube.When countdown reach 0 it will record the mouse location and save it. The button text will change and be disabled. SO DON'T be alarmed!
+19. After all is done click close and you are ready yo use the script
 
 ## Usage
 
