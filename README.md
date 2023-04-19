@@ -1,5 +1,5 @@
-# Diablo-3-AHK-Auto-Salvage
-This is a dynamic and true diablo 3 auto salvage script. You can also keep time and track your goblins per hour if needed
+# ATTENTION
+This AHK script produces a secondary file. It's ONLY for keeping track of the dynamic screen coordinates need for it to function. Without the file this script would not be user friendly in the fact that not just anyone could use it. The file makes it so that setup is a breeze and a one time setup only.
 
 # Diablo 3 Asistant
 
