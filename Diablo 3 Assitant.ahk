@@ -65,13 +65,12 @@ Gui, Add, Button, x56 y+0 w56 gCloseMain, Exit 						;Closes Entire Script
 
 Gui, Tab, Cube
 Gui, Add, Text, x0 y+0 w168 Center vCubePageName, Hope of Cain			;Dynamic name in cube also used for Rare rarities can be used in the conversion process
-Gui, Add, Text, x0 y0 w168 h27 Center +Hidden vCommonRarity, Have Common item(s) in inventory			;Makes it so Common rarities can be selected in converting process
-Gui, Add, Text, x0 y0 w168 h27 Center +Hidden vMagicRarity, Have Magic item(s) in inventory			;Makes it so Magic rarities can be selected in converting process
-Gui, Add, Text, x0 y60 w168 h27 Center vRarity, Have Rare item(s) in inventory
+Gui, Add, Checkbox, x0 y0 w168 h27 Center +Hidden vCommonRarity, Common item(s) in inventory			;Makes it so Common rarities can be selected in converting process
+Gui, Add, Checkbox, x0 y0 w168 h27 Center +Hidden vMagicRarity, Magic item(s) in inventory			;Makes it so Magic rarities can be selected in converting process
+Gui, Add, Checkbox, x0 y60 w168 h27 Center vRarity, Rare item(s) in inventory
 Gui, Add, DropDownList, x0 y0 w168 vGemSelect +Hidden, Select Gem Type||Amethyst|Diamond|Emerald|Ruby|Topaz|
 Gui, Add, DropDownList, x0 y0 w168 vDustSelect +Hidden, Select Dust Type||Amethyst Dust|Diamond Dust|Emerald Dust|Ruby Dust|Topaz Dust|
-Gui, Add, Slider, w168 y+70 Range1-32 ToolTip vRepeatTime,			;Slider for selecting Repeats
-Gui, Add, Text, x0 y+0 w168 Center vRepeats, How many items in inventory?
+Gui, Add, Edit, w168 y+70 Range1-32 -VScroll vRepeatTime, How many items in inventory?`nHow many times to repeat?`nUp to 60 Slots		;Edit Box for selecting Repeats
 Gui, Add, Button, x50 y145 Disabled vPrevious gPrevious, <<
 Gui, Add, Text, x+0 y150 vPages, Page 3
 Gui, Add, Button, x+0 y145 vNext gNext, >>
@@ -199,12 +198,12 @@ ScrapLegs:			;Scraps legendaries
 		WinActivate
 			Loop {
 					PixelSearch, LegLeft, LegRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x0095EE, 3 , Fast
+						If ErrorLevel
+							Break
 						Click %LegLeft%, %LegRight%
 						Send {Enter}
 						MouseMove, %SalvageX%, %SalvageY%
 						Sleep 100
-					If ErrorLevel
-						Break
 				}
 Return
 
@@ -213,6 +212,8 @@ ScrapSets:			;Scraps Set Items
 		WinActivate
 			Loop {
 					PixelSearch, LegLeft, LegRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x15AE20, 2 , Fast
+						If ErrorLevel
+								Break
 						Click %LegLeft%, %LegRight%
 						Send {Enter}
 						MouseMove, %SalvageX%, %SalvageY%
@@ -395,10 +396,10 @@ Transmute:			;Handle Gui Transmute button
 	GuiControlGet, CommonRarity
 	GuiControlGet, MagicRarity
 	
-	If  (Rarity = 1 And Pages = "Page 3")
+	If  (Pages = "Page 3")
 		Loop {	
 					PixelSearch, RareLeft, RareRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x083B4A, 2 , Fast
-							If ErrorLevel
+						If ErrorLevel
 							Break
 						MouseMove, %RareLeft%, %RareRight%
 						Send, {RButton}
@@ -408,15 +409,14 @@ Transmute:			;Handle Gui Transmute button
 						Sleep 2500
 					Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
 					RepeatTime -= 1
+					GuiControl,, RepeatTime, Repeat Times Left = %RepeatTime%
 		} Until RepeatTime = 0
 		
 	Switch GemSelect {			;Handles Convert Gems
 		Case "Amethyst": 
-			If	(DustSelect = "Diamond Dust" And  Rarity = 1)
+			If	(DustSelect = "Diamond Dust")
 				Loop {	
-					PixelSearch, RareLeft1, RareRight1, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x3741B5, 2 , Fast			;Handles Diamond Dust
-						If ErrorLevel
-								Break
+					PixelSearch, RareLeft1, RareRight1, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x273C3F, 2 , Fast			;Handles Diamond Dust
 						MouseMove, %RareLeft1%, %RareRight1%
 						Send, {RButton}
 					Sleep 1000
@@ -428,13 +428,13 @@ Transmute:			;Handle Gui Transmute button
 					Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
 						Sleep 2500
 					Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
+						MouseMove, %GemLeft1%, %GemRight1%
 					RepeatTime -= 1
+					GuiControl,, RepeatTime, Repeat Times Left = %RepeatTime%
 				} Until RepeatTime = 0
-			If	(DustSelect = "Emerald Dust" And  Rarity = 1)
+			If	(DustSelect = "Emerald Dust")
 				Loop {	
 					PixelSearch, RareLeft, RareRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x80E135, 2 , Fast			;Handles Emerald Dust
-						If ErrorLevel
-								Break
 						MouseMove, %RareLeft%, %RareRight%
 						Send, {RButton}
 					Sleep 1000
@@ -446,13 +446,13 @@ Transmute:			;Handle Gui Transmute button
 					Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
 						Sleep 2500
 					Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
+						MouseMove, %GemLeft%, %GemRight%
 					RepeatTime -= 1
+					GuiControl,, RepeatTime, Repeat Times Left = %RepeatTime%
 				} Until RepeatTime = 0
-			If	(DustSelect = "Ruby Dust" And  Rarity = 1)
+			If	(DustSelect = "Ruby Dust")
 				Loop {	
 					PixelSearch, RareLeft, RareRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x1034DA, 2 , Fast			;Handles Ruby Dust
-						If ErrorLevel
-								Break
 						MouseMove, %RareLeft%, %RareRight%
 						Send, {RButton}
 					Sleep 1000
@@ -464,13 +464,13 @@ Transmute:			;Handle Gui Transmute button
 					Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
 						Sleep 2500
 					Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
+						MouseMove, %GemLeft%, %GemRight%
 					RepeatTime -= 1
+					GuiControl,, RepeatTime, Repeat Times Left = %RepeatTime%
 				} Until RepeatTime = 0
-			If	(DustSelect = "Topaz Dust" And  Rarity = 1)
+			If	(DustSelect = "Topaz Dust")
 				Loop {	
 					PixelSearch, RareLeft, RareRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x1783EE, 2 , Fast			;Handles Topaz Dust
-						If ErrorLevel
-								Break
 						MouseMove, %RareLeft%, %RareRight%
 						Send, {RButton}
 					Sleep 1000
@@ -482,14 +482,14 @@ Transmute:			;Handle Gui Transmute button
 					Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
 						Sleep 2500
 					Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
+						MouseMove, %GemLeft%, %GemRight%
 					RepeatTime -= 1
+					GuiControl,, RepeatTime, Repeat Times Left = %RepeatTime%
 				} Until RepeatTime = 0
 		Case "Diamond":
-			If	(DustSelect = "Amethyst Dust" And  Rarity = 1)
+			If	(DustSelect = "Amethyst Dust")
 				Loop {	
-					PixelSearch, RareLeft, RareRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x946392, 2 , Fast			;Handles Amethyst Dust
-						If ErrorLevel
-								Break
+					PixelSearch, RareLeft, RareRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x7A4D83, 2 , Fast			;Handles Amethyst Dust
 						MouseMove, %RareLeft%, %RareRight%
 						Send, {RButton}
 					Sleep 1000
@@ -501,13 +501,13 @@ Transmute:			;Handle Gui Transmute button
 					Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
 						Sleep 2500
 					Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
+						MouseMove, %GemLeft%, %GemRight%
 					RepeatTime -= 1
+					GuiControl,, RepeatTime, Repeat Times Left = %RepeatTime%
 				} Until RepeatTime = 0
-			If	(DustSelect = "Emerald Dust" And  Rarity = 1)
+			If	(DustSelect = "Emerald Dust")
 				Loop {	
 					PixelSearch, RareLeft2, RareRight2, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x80E135, 2 , Fast			;Handles Emerald Dust
-						If ErrorLevel
-								Break
 						MouseMove, %RareLeft2%, %RareRight2%
 						Send, {RButton}
 					Sleep 1000
@@ -519,13 +519,13 @@ Transmute:			;Handle Gui Transmute button
 					Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
 						Sleep 2500
 					Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
+						MouseMove, %GemLeft2%, %GemRight2%
 					RepeatTime -= 1
+					GuiControl,, RepeatTime, Repeat Times Left = %RepeatTime%
 				} Until RepeatTime = 0
-			If	(DustSelect = "Ruby Dust" And  Rarity = 1)
+			If	(DustSelect = "Ruby Dust")
 				Loop {	
 					PixelSearch, RareLeft, RareRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x1034DA, 2 , Fast			;Handles Ruby Dust
-						If ErrorLevel
-								Break
 						MouseMove, %RareLeft%, %RareRight%
 						Send, {RButton}
 					Sleep 1000
@@ -537,13 +537,13 @@ Transmute:			;Handle Gui Transmute button
 					Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
 						Sleep 2500
 					Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
+						MouseMove, %GemLeft%, %GemRight%
 					RepeatTime -= 1
+					GuiControl,, RepeatTime, Repeat Times Left = %RepeatTime%
 				} Until RepeatTime = 0
-			If	(DustSelect = "Topaz Dust" And  Rarity = 1)
+			If	(DustSelect = "Topaz Dust")
 				Loop {	
 					PixelSearch, RareLeft, RareRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x1783EE, 2 , Fast			;Handles Topaz Dust
-						If ErrorLevel
-								Break
 						MouseMove, %RareLeft%, %RareRight%
 						Send, {RButton}
 					Sleep 1000
@@ -555,36 +555,34 @@ Transmute:			;Handle Gui Transmute button
 					Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
 						Sleep 2500
 					Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
+						MouseMove, %GemLeft%, %GemRight%
 					RepeatTime -= 1
+					GuiControl,, RepeatTime, Repeat Times Left = %RepeatTime%
 				} Until RepeatTime = 0
 		Case "Emerald":
-			If	(DustSelect = "Amethyst Dust" And  Rarity = 1)
+			If	(DustSelect = "Amethyst Dust")
 				Loop {	
-					PixelSearch, RareLeft, RareRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x946392, 2 , Fast			;Handles Amethyst Dust
-						If ErrorLevel
-								Break
+					PixelSearch, RareLeft, RareRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x7A4D83, 2 , Fast			;Handles Amethyst Dust
 						MouseMove, %RareLeft%, %RareRight%
 						Send, {RButton}
 					Sleep 1000
-					PixelSearch, GemLeft, GemRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x60FF64, 5 , Fast			;Handles Amethyst Gems
-						If ErrorLevel
-								Break
+					PixelSearch, GemLeft, GemRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x33FF36, 5 , Fast			;Handles Amethyst Gems
 						MouseMove, %GemLeft%, %GemRight%
 						Send, {RButton}
 					Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
 						Sleep 2500
 					Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
+						MouseMove, %GemLeft%, %GemRight%
 					RepeatTime -= 1
+					GuiControl,, RepeatTime, Repeat Times Left = %RepeatTime%
 				} Until RepeatTime = 0			
-			If	(DustSelect = "Diamond Dust" And  Rarity = 1)
+			If	(DustSelect = "Diamond Dust")
 				Loop {	
-					PixelSearch, RareLeft, RareRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x3741B5, 2 , Fast			;Handles Diamond Dust
-						If ErrorLevel
-								Break
+					PixelSearch, RareLeft, RareRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x273C3F, 2 , Fast			;Handles Diamond Dust
 						MouseMove, %RareLeft%, %RareRight%
 						Send, {RButton}
 					Sleep 1000
-					PixelSearch, GemLeft, GemRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x60FF64, 4 , Fast			;Handles Diamond Gems
+					PixelSearch, GemLeft, GemRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x33FF36, 4 , Fast			;Handles Diamond Gems
 						If ErrorLevel
 								Break
 						MouseMove, %GemLeft%, %GemRight%
@@ -592,17 +590,17 @@ Transmute:			;Handle Gui Transmute button
 					Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
 						Sleep 2500
 					Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
+						MouseMove, %GemLeft%, %GemRight%
 					RepeatTime -= 1
+					GuiControl,, RepeatTime, Repeat Times Left = %RepeatTime%
 				} Until RepeatTime = 0
-			If	(DustSelect = "Ruby Dust" And  Rarity = 1)
+			If	(DustSelect = "Ruby Dust")
 				Loop {	
 					PixelSearch, RareLeft, RareRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x1034DA, 2 , Fast			;Handles Ruby Dust
-						If ErrorLevel
-								Break
 						MouseMove, %RareLeft%, %RareRight%
 						Send, {RButton}
 					Sleep 1000
-					PixelSearch, GemLeft, GemRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x60FF64, 5 , Fast			;Handles Ruby Gems
+					PixelSearch, GemLeft, GemRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x33FF36, 5 , Fast			;Handles Ruby Gems
 						If ErrorLevel
 								Break
 						MouseMove, %GemLeft%, %GemRight%
@@ -610,17 +608,17 @@ Transmute:			;Handle Gui Transmute button
 					Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
 						Sleep 2500
 					Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
+						MouseMove, %GemLeft%, %GemRight%
 					RepeatTime -= 1
+					GuiControl,, RepeatTime, Repeat Times Left = %RepeatTime%
 				} Until RepeatTime = 0
-			If	(DustSelect = "Topaz Dust" And  Rarity = 1)
+			If	(DustSelect = "Topaz Dust")
 				Loop {	
 					PixelSearch, RareLeft, RareRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x1783EE, 2 , Fast			;Handles Topaz Dust
-						If ErrorLevel
-								Break
 						MouseMove, %RareLeft%, %RareRight%
 						Send, {RButton}
 					Sleep 1000
-					PixelSearch, GemLeft, GemRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x60FF64, 5 , Fast			;Handles Topaz Gems
+					PixelSearch, GemLeft, GemRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x33FF36, 5 , Fast			;Handles Topaz Gems
 						If ErrorLevel
 								Break
 						MouseMove, %GemLeft%, %GemRight%
@@ -628,14 +626,14 @@ Transmute:			;Handle Gui Transmute button
 					Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
 						Sleep 2500
 					Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
+						MouseMove, %GemLeft%, %GemRight%
 					RepeatTime -= 1
+					GuiControl,, RepeatTime, Repeat Times Left = %RepeatTime%
 				} Until RepeatTime = 0
 		Case "Ruby":
-			If	(DustSelect = "Amethyst Dust" And  Rarity = 1)
+			If	(DustSelect = "Amethyst Dust")
 				Loop {	
-					PixelSearch, RareLeft, RareRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x946392, 2 , Fast			;Handles Amethyst Dust
-						If ErrorLevel
-								Break
+					PixelSearch, RareLeft, RareRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x7A4D83, 2 , Fast			;Handles Amethyst Dust
 						MouseMove, %RareLeft%, %RareRight%
 						Send, {RButton}
 					Sleep 1000
@@ -647,13 +645,13 @@ Transmute:			;Handle Gui Transmute button
 					Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
 						Sleep 2500
 					Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
+						MouseMove, %GemLeft%, %GemRight%
 					RepeatTime -= 1
+					GuiControl,, RepeatTime, Repeat Times Left = %RepeatTime%
 				} Until RepeatTime = 0			
-			If	(DustSelect = "Diamond Dust" And  Rarity = 1)
+			If	(DustSelect = "Diamond Dust")
 				Loop {	
-					PixelSearch, RareLeft, RareRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x3741B5, 2 , Fast			;Handles Diamond Dust
-						If ErrorLevel
-								Break
+					PixelSearch, RareLeft, RareRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x273C3F, 2 , Fast			;Handles Diamond Dust
 						MouseMove, %RareLeft%, %RareRight%
 						Send, {RButton}
 					Sleep 1000
@@ -665,13 +663,13 @@ Transmute:			;Handle Gui Transmute button
 					Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
 						Sleep 2500
 					Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
+						MouseMove, %GemLeft%, %GemRight%
 					RepeatTime -= 1
+					GuiControl,, RepeatTime, Repeat Times Left = %RepeatTime%
 				} Until RepeatTime = 0
-			If	(DustSelect = "Emerald Dust" And  Rarity = 1)
+			If	(DustSelect = "Emerald Dust")
 				Loop {	
 					PixelSearch, RareLeft, RareRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x80E135, 2 , Fast			;Handles Emerald Dust
-						If ErrorLevel
-								Break
 						MouseMove, %RareLeft%, %RareRight%
 						Send, {RButton}
 					Sleep 1000
@@ -683,13 +681,13 @@ Transmute:			;Handle Gui Transmute button
 					Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
 						Sleep 2500
 					Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
+						MouseMove, %GemLeft%, %GemRight%
 					RepeatTime -= 1
+					GuiControl,, RepeatTime, Repeat Times Left = %RepeatTime%
 				} Until RepeatTime = 0
-		If	(DustSelect = "Topaz Dust" And  Rarity = 1)
+		If	(DustSelect = "Topaz Dust")
 				Loop {	
 					PixelSearch, RareLeft, RareRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x1783EE, 2 , Fast			;Handles Topaz Dust
-						If ErrorLevel
-								Break
 						MouseMove, %RareLeft%, %RareRight%
 						Send, {RButton}
 					Sleep 1000
@@ -701,14 +699,14 @@ Transmute:			;Handle Gui Transmute button
 					Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
 						Sleep 2500
 					Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
+						MouseMove, %GemLeft%, %GemRight%
 					RepeatTime -= 1
+					GuiControl,, RepeatTime, Repeat Times Left = %RepeatTime%
 				} Until RepeatTime = 0
 		Case "Topaz":
-			If	(DustSelect = "Amethyst Dust" And  Rarity = 1)
+			If	(DustSelect = "Amethyst Dust")
 				Loop {	
-					PixelSearch, RareLeft, RareRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x946392, 2 , Fast			;Handles Amethyst Dust
-						If ErrorLevel
-								Break
+					PixelSearch, RareLeft, RareRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x7A4D83, 2 , Fast			;Handles Amethyst Dust
 						MouseMove, %RareLeft%, %RareRight%
 						Send, {RButton}
 					Sleep 1000
@@ -720,13 +718,13 @@ Transmute:			;Handle Gui Transmute button
 					Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
 						Sleep 2500
 					Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
+						MouseMove, %GemLeft%, %GemRight%
 					RepeatTime -= 1
+					GuiControl,, RepeatTime, Repeat Times Left = %RepeatTime%
 				} Until RepeatTime = 0			
-			If	(DustSelect = "Diamond Dust" And  Rarity = 1)
+			If	(DustSelect = "Diamond Dust")
 				Loop {	
-					PixelSearch, RareLeft, RareRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x3741B5, 2 , Fast			;Handles Diamond Dust
-						If ErrorLevel
-								Break
+					PixelSearch, RareLeft, RareRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x273C3F, 1 , Fast			;Handles Diamond Dust
 						MouseMove, %RareLeft%, %RareRight%
 						Send, {RButton}
 					Sleep 1000
@@ -738,13 +736,13 @@ Transmute:			;Handle Gui Transmute button
 					Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
 						Sleep 2500
 					Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
+						MouseMove, %GemLeft%, %GemRight%
 					RepeatTime -= 1
+					GuiControl,, RepeatTime, Repeat Times Left = %RepeatTime%
 				} Until RepeatTime = 0
-			If	(DustSelect = "Emerald Dust" And  Rarity = 1)
+			If	(DustSelect = "Emerald Dust")
 				Loop {	
 					PixelSearch, RareLeft, RareRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x80E135, 2 , Fast			;Handles Emerald Dust
-						If ErrorLevel
-								Break
 						MouseMove, %RareLeft%, %RareRight%
 						Send, {RButton}
 					Sleep 1000
@@ -755,18 +753,18 @@ Transmute:			;Handle Gui Transmute button
 						Send, {RButton}
 					Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
 						Sleep 2500
-					Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
+					Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%	
+						MouseMove, %GemLeft%, %GemRight%
 					RepeatTime -= 1
+					GuiControl,, RepeatTime, Repeat Times Left = %RepeatTime%
 				} Until RepeatTime = 0
-			If	(DustSelect = "Ruby Dust" And  Rarity = 1)
+			If	(DustSelect = "Ruby Dust")
 				Loop {	
-					PixelSearch, RareLeft, RareRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x1034DA, 2 , Fast			;Handles Ruby Dust
-						If ErrorLevel
-								Break
+					PixelSearch, RareLeft, RareRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x1034DA, 2 , Fast			;Handles Ruby Dust	
 						MouseMove, %RareLeft%, %RareRight%
 						Send, {RButton}
 					Sleep 1000
-					PixelSearch, GemLeft, GemRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x4B56EF, 5 , Fast			;Handles Ruby Gems
+					PixelSearch, GemLeft, GemRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x27B1E9, 4 , Fast			;Handles Ruby Gems
 						If ErrorLevel
 								Break
 						MouseMove, %GemLeft%, %GemRight%
@@ -774,13 +772,15 @@ Transmute:			;Handle Gui Transmute button
 					Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
 						Sleep 2500
 					Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
+						MouseMove, %GemLeft%, %GemRight%
 					RepeatTime -= 1
+					GuiControl,, RepeatTime, Repeat Times Left = %RepeatTime%
 				} Until RepeatTime = 0
 	}
 	
-	If  (Rarity = 1 And Pages = "Page 7")			;Handles rare item conversion
+	If  (Pages = "Page 7" And Rarity = 1)			;Handles rare item conversion
 		Loop {	
-			PixelSearch, RareLeft, RareRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0xD0D0D0, 1 , Fast
+			PixelSearch, RareLeft, RareRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x083B4A, 1 , Fast
 				If ErrorLevel
 						Break
 				MouseMove, %RareLeft%, %RareRight%
@@ -791,8 +791,9 @@ Transmute:			;Handle Gui Transmute button
 				Sleep 2500
 			Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
 			RepeatTime -= 1
+			GuiControl,, RepeatTime, Repeat Times Left = %RepeatTime%
 		} Until RepeatTime = 0
-	If  (MagicRarity = 1 And Pages = "Page 7")			;Handles Magic item conversion	
+	If  (Pages = "Page 7" And MagicRarity = 1)			;Handles Magic item conversion	
 		Loop {	
 			PixelSearch, RareLeft, RareRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x311C10, 2 , Fast
 				If ErrorLevel
@@ -805,9 +806,10 @@ Transmute:			;Handle Gui Transmute button
 				Sleep 2500
 			Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
 			RepeatTime -= 1
+			GuiControl,, RepeatTime, Repeat Times Left = %RepeatTime%
 		} Until RepeatTime = 0
 	
-		If  (CommonRarity = 1 And Pages = "Page 8")			;Handles common item conversion
+		If  (And Pages = "Page 8" And CommonRarity = 1)			;Handles common item conversion
 		Loop {	
 			PixelSearch, RareLeft, RareRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0xD0D0D0, 1 , Fast
 				If ErrorLevel
@@ -820,8 +822,9 @@ Transmute:			;Handle Gui Transmute button
 				Sleep 2500
 			Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
 			RepeatTime -= 1
+			GuiControl,, RepeatTime, Repeat Times Left = %RepeatTime%
 		} Until RepeatTime = 0
-	If  (Rarity = 1 And Pages = "Page 8")			;Handles rare item conversion
+	If  (Pages = "Page 8" And Rarity = 1)			;Handles rare item conversion
 		Loop {	
 			PixelSearch, RareLeft, RareRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x083B4A, 2 , Fast
 				If ErrorLevel
@@ -834,9 +837,10 @@ Transmute:			;Handle Gui Transmute button
 				Sleep 2500
 			Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
 			RepeatTime -= 1
+			GuiControl,, RepeatTime, Repeat Times Left = %RepeatTime%
 		} Until RepeatTime = 0
 		
-	If  (CommonRarity = 1 And Pages = "Page 9")			;Handles common item conversion
+	If  (Pages = "Page 9" And CommonRarity = 1)			;Handles common item conversion
 		Loop {	
 			PixelSearch, RareLeft, RareRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0xD0D0D0, 1 , Fast
 				If ErrorLevel
@@ -849,8 +853,9 @@ Transmute:			;Handle Gui Transmute button
 				Sleep 2500
 			Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
 			RepeatTime -= 1
+			GuiControl,, RepeatTime, Repeat Times Left = %RepeatTime%
 		} Until RepeatTime = 0
-	If  (MagicRarity = 1 And Pages = "Page 9")			;Handles Magic item conversion	
+	If  (Pages = "Page 9" MagicRarity = 1)			;Handles Magic item conversion	
 		Loop {	
 			PixelSearch, RareLeft, RareRight, %TopLeftX%, %TopLeftY%, %BottomRightX%, %BottomRightY%, 0x311C10, 2 , Fast
 				If ErrorLevel
@@ -863,6 +868,7 @@ Transmute:			;Handle Gui Transmute button
 				Sleep 2500
 			Click, %CubeTransmuteButtonX%, %CubeTransmuteButtonY%
 			RepeatTime -= 1
+			GuiControl,, RepeatTime, Repeat Times Left = %RepeatTime%
 		} Until RepeatTime = 0	
 	
 Return
@@ -896,8 +902,9 @@ Return
 
 UpgradeRareItem:			;Handles CubeUpgrade Rare Items
 	GuiControl,, Pages, Page 3
-	GuiControl,, Rarity, Have Rare item(s) in inventory
+	GuiControl,, Rarity, Rare item(s) in inventory
 	GuiControl,, CubePageName, Hope of Cain
+	GuiControl,, RepeatTime, How many items in inventory?`nHow many times to repeat?`nUp to 60 Slots
 	GuiControl, Move, Rarity, y60
 	GuiControl, Show, Rarity
 	GuiControl, Move, Previous, y145
@@ -907,17 +914,20 @@ UpgradeRareItem:			;Handles CubeUpgrade Rare Items
 	GuiControl, Disabled, Previous
 	GuiControl, Hide, GemSelect
 	GuiControl, Hide, DustSelect
+	GuiControl,, MagicRarity, 0
+	GuiControl,, CommonRarity, 0
+	GuiControl,, Rarity, 0
 	Gui, Show, x0 y0 AutoSize, Diablo 3 Assistant
 Return
 
 ConvertGems:			;Handles CubeConvert Gems
 	GuiControl,, Pages, Page 6
-	GuiControl,, Rarity, Have Selected Gems in Inventory
+	GuiControl,, Rarity, Selected Gems in Inventory
 	GuiControl,, CubePageName, Darkness of Radament
+	GuiControl,, RepeatTime, How many items in inventory?`nHow many times to repeat?`nUp to 60 Slots
 	GuiControl, Enabled, Previous
 	GuiControl, Move, Rarity, y62
 	GuiControl, Move, RepeatTime, y95
-	GuiControl, Move, Repeats, y127
 	GuiControl, Show, DustSelect
 	GuiControl, Show, GemSelect
 	GuiControl, Hide, MagicRarity
@@ -927,19 +937,22 @@ ConvertGems:			;Handles CubeConvert Gems
 	GuiControl, Move, Pages, y205
 	GuiControl, Move, Next, y200
 	GuiControl, Move, Transmute, y223
+	GuiControl,, MagicRarity, 0
+	GuiControl,, CommonRarity, 0
+	GuiControl,, Rarity, 0
 	Gui, Show, x0 y0 AutoSize, Diablo 3 Assistant
 	
 Return
 
 ConvertReusableParts:			;Handles Cube Convert Reusable Parts
 	GuiControl,, Pages, Page 7
-	GuiControl,, Rarity, Have Rare item(s) in inventory
+	GuiControl,, Rarity, Rare item(s) in inventory
 	GuiControl,, CubePageName, Pleasure of Iben Fahd
+	GuiControl,, RepeatTime, How many items in inventory?`nHow many times to repeat?`nUp to 60 Slots
 	GuiControl, Move, Rarity, y62
 	GuiControl, Show, MagicRarity
 	GuiControl, Move, MagicRarity, y90
 	GuiControl, Move, RepeatTime, y117
-	GuiControl, Move, Repeats, y157
 	GuiControl, Hide, DustSelect
 	GuiControl, Hide, GemSelect
 	GuiControl, Hide, CommonRarity
@@ -949,6 +962,9 @@ ConvertReusableParts:			;Handles Cube Convert Reusable Parts
 	GuiControl, Move, Pages, y180
 	GuiControl, Move, Next, y175
 	GuiControl, Move, Transmute, y198
+	GuiControl,, MagicRarity, 0
+	GuiControl,, CommonRarity, 0
+	GuiControl,, Rarity, 0
 	Gui, Show, x0 y0 AutoSize, Diablo 3 Assistant
 
 Return
@@ -956,11 +972,15 @@ Return
 ConvertArcaneDust:			;Handles Cube Convert Arcane Dust
 	GuiControl,, Pages, Page 8
 	GuiControl,, CubePageName, Regret of Iben Fahd
+	GuiControl,, RepeatTime, How many items in inventory?`nHow many times to repeat?`nUp to 60 Slots
 	GuiControl, Enabled, Next
 	GuiControl, Hide, MagicRarity
 	GuiControl, Show, Rarity
 	GuiControl, Show, CommonRarity
 	GuiControl, Move, CommonRarity, y90
+	GuiControl,, MagicRarity, 0
+	GuiControl,, CommonRarity, 0
+	GuiControl,, Rarity, 0
 	Gui, Show, x0 y0 AutoSize, Diablo 3 Assistant
 
 Return
@@ -968,10 +988,14 @@ Return
 ConvertVeiledCrystal:			;Handles Cube Convert Veiled Crystals
 	GuiControl,, Pages, Page 9
 	GuiControl,, CubePageName, Wrath of Iben Fahd
+	GuiControl,, RepeatTime, How many items in inventory?`nHow many times to repeat?`nUp to 60 Slots
 	GuiControl, Disabled, Next
 	GuiControl, Hide, Rarity
 	GuiControl, Show, MagicRarity
 	GuiControl, Move, MagicRarity, y62
+	GuiControl,, MagicRarity, 0
+	GuiControl,, CommonRarity, 0
+	GuiControl,, Rarity, 0
 	Gui, Show, x0 y0 AutoSize, Diablo 3 Assistant
 
 Return
